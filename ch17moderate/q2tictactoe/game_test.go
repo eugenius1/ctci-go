@@ -30,8 +30,8 @@ func TestGameWinner(t *testing.T) {
 	}
 	for _, c := range cases {
 		g := TicTacToeGame{c.b}
-		if w := g.GameWinner(); w != c.w {
-			t.Errorf("Got %v as winner, but expected (%v)", w, c.w)
+		if got := g.GameWinner(); got != c.w {
+			t.Errorf("Got %v as winner, but expected %v", got, c.w)
 		}
 	}
 }

@@ -14,13 +14,6 @@ type TicTacToeGame struct {
 	board TicTacToeBoard
 }
 
-func lineWinner(e1, e2, e3 TicTacToePlayer) TicTacToePlayer {
-	if e1 != NoPlayer && e1 == e2 && e1 == e3 {
-		return e1
-	}
-	return NoPlayer
-}
-
 func (g *TicTacToeGame) GameWinner() TicTacToePlayer {
 	b := g.board
 	// row (inner array)
@@ -41,6 +34,13 @@ func (g *TicTacToeGame) GameWinner() TicTacToePlayer {
 	}
 	if winner := lineWinner(b[0][2], b[1][1], b[2][0]); winner != NoPlayer {
 		return winner
+	}
+	return NoPlayer
+}
+
+func lineWinner(e1, e2, e3 TicTacToePlayer) TicTacToePlayer {
+	if e1 != NoPlayer && e1 == e2 && e1 == e3 {
+		return e1
 	}
 	return NoPlayer
 }
