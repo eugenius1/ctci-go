@@ -7,29 +7,29 @@ func TestGameWinner(t *testing.T) {
 	A := PlayerA
 	B := PlayerB
 	cases := []struct {
-		b TicTacToeBoard
-		w TicTacToePlayer
+		b Board
+		w Player
 	}{
 		// empty board
-		{TicTacToeBoard{{N, N, N}, {N, N, N}, {N, N, N}}, N},
+		{Board{{N, N, N}, {N, N, N}, {N, N, N}}, N},
 		// row (inner array) winner
-		{TicTacToeBoard{{A, A, A}, {N, N, N}, {N, N, N}}, A},
-		{TicTacToeBoard{{A, A, N}, {B, B, B}, {N, A, A}}, B},
-		{TicTacToeBoard{{N, N, N}, {N, N, N}, {A, A, A}}, A},
+		{Board{{A, A, A}, {N, N, N}, {N, N, N}}, A},
+		{Board{{A, A, N}, {B, B, B}, {N, A, A}}, B},
+		{Board{{N, N, N}, {N, N, N}, {A, A, A}}, A},
 		// column winner
-		{TicTacToeBoard{{A, N, N}, {A, N, N}, {A, N, N}}, A},
-		{TicTacToeBoard{{N, B, A}, {N, B, N}, {N, B, A}}, B},
-		{TicTacToeBoard{{N, N, A}, {N, N, A}, {N, N, A}}, A},
+		{Board{{A, N, N}, {A, N, N}, {A, N, N}}, A},
+		{Board{{N, B, A}, {N, B, N}, {N, B, A}}, B},
+		{Board{{N, N, A}, {N, N, A}, {N, N, A}}, A},
 		// diagonal winner
-		{TicTacToeBoard{{N, N, A}, {N, A, N}, {A, N, N}}, A},
-		{TicTacToeBoard{{B, N, N}, {A, B, N}, {A, N, B}}, B},
+		{Board{{N, N, A}, {N, A, N}, {A, N, N}}, A},
+		{Board{{B, N, N}, {A, B, N}, {A, N, B}}, B},
 		// no winner
-		{TicTacToeBoard{{N, N, N}, {N, N, N}, {A, A, B}}, N},
-		{TicTacToeBoard{{A, N, N}, {A, N, N}, {B, N, N}}, N},
-		{TicTacToeBoard{{N, N, A}, {N, A, N}, {N, N, N}}, N},
+		{Board{{N, N, N}, {N, N, N}, {A, A, B}}, N},
+		{Board{{A, N, N}, {A, N, N}, {B, N, N}}, N},
+		{Board{{N, N, A}, {N, A, N}, {N, N, N}}, N},
 	}
 	for _, c := range cases {
-		g := TicTacToeGame{c.b}
+		g := Game{c.b}
 		if got := g.GameWinner(); got != c.w {
 			t.Errorf("Got %v as winner, but expected %v", got, c.w)
 		}

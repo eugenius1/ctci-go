@@ -1,20 +1,20 @@
 package q02tictactoe
 
-type TicTacToePlayer int
+type Player int
 
 const (
-	NoPlayer TicTacToePlayer = iota
+	NoPlayer Player = iota
 	PlayerA
 	PlayerB
 )
 
-type TicTacToeBoard [3][3]TicTacToePlayer
+type Board [3][3]Player
 
-type TicTacToeGame struct {
-	board TicTacToeBoard
+type Game struct {
+	board Board
 }
 
-func (g *TicTacToeGame) GameWinner() TicTacToePlayer {
+func (g *Game) GameWinner() Player {
 	b := g.board
 	// row (inner array)
 	for _, line := range b {
@@ -38,7 +38,7 @@ func (g *TicTacToeGame) GameWinner() TicTacToePlayer {
 	return NoPlayer
 }
 
-func lineWinner(e1, e2, e3 TicTacToePlayer) TicTacToePlayer {
+func lineWinner(e1, e2, e3 Player) Player {
 	if e1 != NoPlayer && e1 == e2 && e1 == e3 {
 		return e1
 	}
