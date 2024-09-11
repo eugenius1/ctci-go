@@ -8,9 +8,11 @@ type BiNode struct {
 type DataIterator chan int
 type NodeIterator chan (*BiNode)
 
-// logical distinction between what the data structure represents
-type Tree BiNode
-type List BiNode
+// logical distinction for what the data structure represents
+type (
+	Tree BiNode
+	List BiNode
+)
 
 func (i DataIterator) GetAll() []int {
 	result := make([]int, 0)
@@ -33,53 +35,58 @@ func ListIterator(listHead *BiNode) DataIterator {
 }
 
 func TreeToList(treeRoot *BiNode) (listHead *BiNode) {
-	if treeRoot != nil {
-		if leftTree := treeRoot.node1; leftTree != nil {
-			beforeRoot, parentOfBeforeRoot := (*Tree)(leftTree).last()
+	if treeRoot == nil {
+		return nil
+	}
 
-			if parentOfBeforeRoot != nil {
-				// replace beforeRoot in the tree with beforeRoot.node1, assuming beforeRoot.node2 == nil
-				parentOfBeforeRoot.node2 = beforeRoot.node1
-			} else {
-				// beforeRoot was root of leftTree so pull up the (lower) left side
-				leftTree = beforeRoot.node1
-			}
-			linkListNodes(beforeRoot, treeRoot)
+	if leftTree := treeRoot.node1; leftTree != nil {
+		beforeRoot, parentOfBeforeRoot := (*Tree)(leftTree).last()
 
-			if leftTree != nil {
-				// store node before beforeRoot
-				beforeBeforeRoot, _ := (*Tree)(leftTree).last()
-				// recurse on the left tree
-				listHead = TreeToList(leftTree)
-				// link left list to beforeRoot
-				linkListNodes(beforeBeforeRoot, beforeRoot)
-			} else {
-				// there was only 1 node on the left
-				listHead = beforeRoot
-			}
+		if parentOfBeforeRoot != nil {
+			// replace beforeRoot in the tree with beforeRoot.node1, as beforeRoot.node2 == nil
+			parentOfBeforeRoot.node2 = beforeRoot.node1
+		} else {
+			// beforeRoot was root of leftTree so pull up the (lower) left side
+			leftTree = beforeRoot.node1
 		}
-		if listHead == nil {
-			// nothing on the left tree
-			listHead = treeRoot
-		}
-		if rightTree := treeRoot.node2; rightTree != nil {
-			afterRoot, parentOfAfterRoot := (*Tree)(rightTree).first()
+		linkListNodes(beforeRoot, treeRoot)
 
-			if parentOfAfterRoot != nil {
-				// replace afterRoot in the tree with afterRoot.node2, assuming afterRoot.node1 == nil
-				parentOfAfterRoot.node1 = afterRoot.node2
-			} else {
-				// afterRoot was root of rightTree so pull up the (higher) right side
-				rightTree = afterRoot.node2
-			}
-			linkListNodes(treeRoot, afterRoot)
-
-			if rightTree != nil {
-				// recurse on the right tree
-				afterRoot.node2 = TreeToList(rightTree)
-			}
+		if leftTree != nil {
+			// store node before beforeRoot
+			beforeBeforeRoot, _ := (*Tree)(leftTree).last()
+			// recurse on the left tree
+			listHead = TreeToList(leftTree)
+			// link left list to beforeRoot
+			linkListNodes(beforeBeforeRoot, beforeRoot)
+		} else {
+			// there was only 1 node on the left
+			listHead = beforeRoot
 		}
 	}
+
+	if listHead == nil {
+		// nothing on the left tree
+		listHead = treeRoot
+	}
+
+	if rightTree := treeRoot.node2; rightTree != nil {
+		afterRoot, parentOfAfterRoot := (*Tree)(rightTree).first()
+
+		if parentOfAfterRoot != nil {
+			// replace afterRoot in the tree with afterRoot.node2, as afterRoot.node1 == nil
+			parentOfAfterRoot.node1 = afterRoot.node2
+		} else {
+			// afterRoot was root of rightTree so pull up the (higher) right side
+			rightTree = afterRoot.node2
+		}
+		linkListNodes(treeRoot, afterRoot)
+
+		if rightTree != nil {
+			// recurse on the right tree
+			afterRoot.node2 = TreeToList(rightTree)
+		}
+	}
+
 	return listHead
 }
 

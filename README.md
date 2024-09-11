@@ -5,5 +5,3 @@ Run unit tests:
 ```sh
 make test
 ```
-
-## [Chapter 17: Moderate](ch17moderate)

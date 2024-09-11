@@ -1,4 +1,4 @@
-package q2tictactoe
+package q02tictactoe
 
 import "testing"
 
