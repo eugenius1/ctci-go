@@ -3,7 +3,7 @@
 Run unit tests:
 
 ```sh
-go test ./...
+make test
 ```
 
 ## [Chapter 17: Moderate](ch17moderate)
