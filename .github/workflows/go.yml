@@ -33,6 +33,14 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: generated/cover.out
 
+  vulncheck:
+    name: Vulnerability Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: golang/govulncheck-action@v1
+        with:
+          go-version-input: 1.22
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
