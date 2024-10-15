@@ -5,10 +5,12 @@ type BiNode struct {
 	data         int
 }
 
-type DataIterator chan int
-type NodeIterator chan (*BiNode)
+type (
+	DataIterator chan int
+	NodeIterator chan (*BiNode)
+)
 
-// logical distinction for what the data structure represents
+// Logical distinction for what the data structure represents.
 type (
 	Tree BiNode
 	List BiNode
@@ -19,19 +21,22 @@ func (i DataIterator) GetAll() []int {
 	for data := range i {
 		result = append(result, data)
 	}
+
 	return result
 }
 
 func TreeIterator(treeRoot *BiNode) DataIterator {
-	c := make(DataIterator)
-	go iterateTreeData(treeRoot, c)
-	return c
+	iterator := make(DataIterator)
+	go iterateTreeData(treeRoot, iterator)
+
+	return iterator
 }
 
 func ListIterator(listHead *BiNode) DataIterator {
-	c := make(DataIterator)
-	go iterateListData((*List)(listHead), c)
-	return c
+	iterator := make(DataIterator)
+	go iterateListData((*List)(listHead), iterator)
+
+	return iterator
 }
 
 func TreeToList(treeRoot *BiNode) (listHead *BiNode) {
@@ -49,6 +54,7 @@ func TreeToList(treeRoot *BiNode) (listHead *BiNode) {
 			// beforeRoot was root of leftTree so pull up the (lower) left side
 			leftTree = beforeRoot.node1
 		}
+
 		linkListNodes(beforeRoot, treeRoot)
 
 		if leftTree != nil {
@@ -79,6 +85,7 @@ func TreeToList(treeRoot *BiNode) (listHead *BiNode) {
 			// afterRoot was root of rightTree so pull up the (higher) right side
 			rightTree = afterRoot.node2
 		}
+
 		linkListNodes(treeRoot, afterRoot)
 
 		if rightTree != nil {
@@ -95,26 +102,28 @@ func linkListNodes(first, second *BiNode) {
 	second.node1 = first
 }
 
-func iterateTreeData(tree *BiNode, c DataIterator) {
+func iterateTreeData(tree *BiNode, iterator DataIterator) {
 	nodes := make(NodeIterator)
 	go iterateTreeNodes(tree, nodes)
+
 	for node := range nodes {
-		c <- node.data
+		iterator <- node.data
 	}
-	close(c)
+
+	close(iterator)
 }
 
-// iterate non-nil tree nodes in order
-func iterateTreeNodes(tree *BiNode, c NodeIterator) {
-	iterateTreeNodesRecursively(tree, c)
-	close(c)
+// Iterate non-nil tree nodes in order.
+func iterateTreeNodes(tree *BiNode, iterator NodeIterator) {
+	iterateTreeNodesRecursively(tree, iterator)
+	close(iterator)
 }
 
-func iterateTreeNodesRecursively(tree *BiNode, c NodeIterator) {
+func iterateTreeNodesRecursively(tree *BiNode, iterator NodeIterator) {
 	if tree != nil {
-		iterateTreeNodesRecursively(tree.node1, c)
-		c <- tree
-		iterateTreeNodesRecursively(tree.node2, c)
+		iterateTreeNodesRecursively(tree.node1, iterator)
+		iterator <- tree
+		iterateTreeNodesRecursively(tree.node2, iterator)
 	}
 }
 
@@ -124,6 +133,7 @@ func (t *Tree) first() (node, parent *BiNode) {
 		parent = node
 		node = node.node1
 	}
+
 	return node, parent
 }
 
@@ -133,25 +143,29 @@ func (t *Tree) last() (node, parent *BiNode) {
 		parent = node
 		node = node.node2
 	}
+
 	return node, parent
 }
 
-// iterate list nodes in order assuming head is given
-func iterateListNodes(head *List, c NodeIterator) {
+// Iterate list nodes in order assuming head is given.
+func iterateListNodes(head *List, iterator NodeIterator) {
 	node := (*BiNode)(head)
 	for node != nil {
-		c <- node
+		iterator <- node
 		node = node.node2
 	}
-	close(c)
+
+	close(iterator)
 }
 
-// iterate list data in order assuming head is given
-func iterateListData(head *List, c DataIterator) {
+// Iterate list data in order assuming head is given.
+func iterateListData(head *List, iterator DataIterator) {
 	nodes := make(NodeIterator)
 	go iterateListNodes(head, nodes)
+
 	for node := range nodes {
-		c <- node.data
+		iterator <- node.data
 	}
-	close(c)
+
+	close(iterator)
 }

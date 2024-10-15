@@ -1,0 +1,49 @@
+run:
+  timeout: 5m
+
+output:
+  sort-results: true
+
+# See https://golangci-lint.run/usage/linters/
+linters:
+  disable:
+    # included in test preset:
+    - testpackage
+    - exhaustruct
+    # included in style preset:
+    - nonamedreturns
+    - varnamelen
+
+  presets:
+    - bugs
+    - comment
+    - complexity
+    - error
+    - format
+    - import
+    - metalinter
+    - module
+    - performance
+    - style
+    - sql
+    - test
+    - unused
+
+linters-settings:
+  funlen:
+    # Checks the number of lines in a function.
+    # If lower than 0, disable the check.
+    # Default: 60
+    lines: -1
+    # Checks the number of statements in a function.
+    # If lower than 0, disable the check.
+    # Default: 40
+    # statements: -1
+    ignore-comments: true
+
+  godox:
+    # Report any comments starting with keywords, this is useful for TODO or FIXME comments that
+    # might be left in the code accidentally and should be resolved before merging.
+    # Default: ["TODO", "BUG", "FIXME"]
+    keywords:
+      - FIXME
