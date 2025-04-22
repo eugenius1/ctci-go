@@ -22,7 +22,7 @@ jobs:
           go-version: "1.22"
 
       - name: Build
-        run: make
+        run: make build
 
       - name: Test
         run: make test
@@ -50,6 +50,7 @@ jobs:
         with:
           go-version: "1.22"
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v7
         with:
-          version: v1.60
+          # See https://golangci-lint.run/product/changelog/
+          version: v2.1
